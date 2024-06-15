@@ -23,6 +23,10 @@ func NewnewConfRPC(op protobuf.AdminOp, conf []string) rpcs.Rpc {
     }
 }
 
+func (this *NewConf) Execute() {
+  panic("Not implemented")
+}
+
 
 // ToString implements rpcs.Rpc.
 func (this *NewConf) ToString() string {

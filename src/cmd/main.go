@@ -40,13 +40,13 @@ func main()  {
     } else {
       log.Printf("%sSUCCESS\n%s", green, white)
     }
-    res, err:= clust.SendConfig(cluster.NEW)
+    log.Printf("Configuring cluster...")
+    res, err := clust.SendConfig(cluster.NEW)
     if err != nil {
       log.Printf("%sFAILED\n%s", red, white)
       log.Println(err)
     } else {
-      
-      log.Printf("%sSUCCESS\n%s", green, white)
+      res.Execute()
     }
     
     /*var conn net.Conn

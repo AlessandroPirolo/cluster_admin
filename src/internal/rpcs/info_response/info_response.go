@@ -16,6 +16,10 @@ func NewInfoResonse() rpc.Rpc  {
   return req
 }
 
+func (this *InfoResponse) Execute() {
+  panic("Not implemented")
+}
+
 func (this *InfoResponse) ToString() string {
   return " "
 } 

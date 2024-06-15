@@ -8,9 +8,10 @@ import (
 	"net"
 	"raft/admin/raft-rpcProtobuf-messages/rpcEncoding/out/protobuf"
 	"raft/admin/src/internal/rpcs"
-  conf "raft/admin/src/internal/rpcs/new_conf"
 	inforequest "raft/admin/src/internal/rpcs/info_request"
 	inforesponse "raft/admin/src/internal/rpcs/info_response"
+	conf "raft/admin/src/internal/rpcs/new_conf"
+	clientReturnValue "raft/admin/src/internal/rpcs/return_value"
 	"raft/admin/src/internal/utility"
 	"slices"
 	"strings"
@@ -83,7 +84,7 @@ func (this *clusterImpl) ConnectToLeader() error {
 /*
  * Removing a node by its public IPs
 */
-func (this *clusterImpl) RemoveNode(IP string) ([]byte, error) {
+func (this *clusterImpl) RemoveNode(IP string) (rpcs.Rpc, error) {
   var found bool = slices.ContainsFunc(this.IPs, func(element utility.Pair[string, string]) bool {
                                               return IP == element.Fst}) 
 
@@ -138,11 +139,12 @@ func (this *clusterImpl) GetConfig() (rpcs.Rpc, error) {
  * between a NEW configuration (i.e. starting config) 
  * and a CHANGE configuration (i.e. modified config)
 */
-func (this *clusterImpl) SendConfig(op ConfigChangeOp) ([]byte, error) {
+func (this *clusterImpl) SendConfig(op ConfigChangeOp) (rpcs.Rpc, error) {
   var req rpcs.Rpc
-  var reqByte []byte
-  var err error
+  var reqByte, resp []byte
+  var err, errResp, errReturn error
   var config []string = this.getPrivateIPs()
+  var returnVal clientReturnValue.ClientReturnValue
 
   switch op {
     case CHANGE: 
@@ -157,7 +159,18 @@ func (this *clusterImpl) SendConfig(op ConfigChangeOp) ([]byte, error) {
     log.Println(err)
   }
   this.conn.Write(reqByte)
-  return recv(this.conn)
+  resp, errResp = recv(this.conn)
+  if errResp != nil {
+    return nil, errResp
+  }
+
+  errReturn = returnVal.Decode(resp)
+  if errReturn != nil {
+    return nil, errReturn
+  }
+
+  return &returnVal, nil
+
 }
 
 /*

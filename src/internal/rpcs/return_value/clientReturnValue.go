@@ -21,6 +21,15 @@ func NewclientReturnValueRPC(exitStatus protobuf.STATUS, description string) rpc
     }
 }
 
+func (this *ClientReturnValue) Execute() {
+  if this.pMex.ExitStatus == protobuf.STATUS_SUCCESS {
+    log.Printf("\x1b[32mSUCCESS\x1b[0m\n")
+  } else {
+    log.Printf("\x1b[31mFAILED\x1b[0m\n")
+    log.Printf("reason: %s", this.pMex.GetDescription())
+  }
+}
+
 // ToString implements rpcs.Rpc.
 func (this *ClientReturnValue) ToString() string {
     return this.pMex.String()

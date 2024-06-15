@@ -22,6 +22,10 @@ func NewInfoRequest() rpc.Rpc  {
   return req
 }
 
+func (this *InfoRequest) Execute() {
+  panic("Not implemented")
+}
+
 func (this *InfoRequest) ToString() string {
   return " "
 } 

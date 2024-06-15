@@ -42,6 +42,10 @@ func NewClientRequest(parameters map[string]string) rpc.Rpc  {
   }
 }
 
+func (this *ClientRequest) Execute() {
+  panic("Not implemented")
+}
+
 func (this *ClientRequest) ToString() string {
   return " "
 } 

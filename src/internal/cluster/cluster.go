@@ -7,10 +7,10 @@ import (
 
 type Cluster interface {
   GetConfig() (rpcs.Rpc, error)
-  RemoveNode(IP string) ([]byte, error)
+  RemoveNode(IP string) (rpcs.Rpc, error)
   EnstablishConnection() error
   ConnectToLeader() error 
-  SendConfig(op ConfigChangeOp) ([]byte, error) 
+  SendConfig(op ConfigChangeOp) (rpcs.Rpc, error) 
 }
 
 func NewCluster(IPs []utility.Pair[string,string]) *clusterImpl {

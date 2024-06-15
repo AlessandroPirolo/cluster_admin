@@ -2,7 +2,7 @@ package rpcs
 
 type Rpc interface {
 	ToString() string
-	//Execute() *Rpc
+	Execute()
 	Encode() ([]byte, error)
 	Decode(rawMex []byte) error
 }
